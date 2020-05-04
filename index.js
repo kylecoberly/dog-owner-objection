@@ -3,9 +3,17 @@ const app = express()
 
 const port = process.env.PORT || 4000
 
-app.get("/", (request, response) => {
-  response.json({
-    message: "Gluten tag"
+const Owner = require("./models/Owner")
+const Dog = require("./models/Dog")
+
+app.get("/dogs", (request, response) => {
+  Dog.query().withGraphFetched("owners").then(dogs => {
+    response.json({ dogs })
+  })
+})
+app.get("/owners", (request, response) => {
+  Owner.query().withGraphFetched("dogs").then(owners => {
+    response.json({ owners })
   })
 })
 
